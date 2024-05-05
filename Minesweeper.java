@@ -1,36 +1,37 @@
 import java.util.*;
 
 public class Minesweeper {
-  private static final int SIZE = 8; // Size of the grid
-  private static final int MINES = 10; // Number of mines
+  private static final int SIZE = 8;
+  private static final int MINES = 10;
 
-  private char[][] grid; // The grid to display
-  private boolean[][] revealed; // To track revealed cells
-  private Set<Integer> mines; // Set to store mine positions
+  private char[][] grid;
+  private boolean[][] selected;
+  private boolean[][] marked;
+  private Set<Integer> mines;
 
   private Scanner scanner;
 
   public Minesweeper() {
     grid = new char[SIZE][SIZE];
-    revealed = new boolean[SIZE][SIZE];
+    selected = new boolean[SIZE][SIZE];
+    marked = new boolean[SIZE][SIZE];
     mines = new HashSet<>();
     scanner = new Scanner(System.in);
-    initializeGrid();
-    placeMines();
+    setupGrid();
+    setupMines();
   }
 
-  // Initialize the grid with hidden cells
-  private void initializeGrid() {
+  private void setupGrid() {
     for (int i = 0; i < SIZE; i++) {
       for (int j = 0; j < SIZE; j++) {
         grid[i][j] = '-';
-        revealed[i][j] = false;
+        selected[i][j] = false;
+        marked[i][j] = false;
       }
     }
   }
 
-  // Place mines randomly on the grid
-  private void placeMines() {
+  private void setupMines() {
     Random random = new Random();
     int count = 0;
     while (count < MINES) {
@@ -42,9 +43,10 @@ public class Minesweeper {
     }
   }
 
-  // Display the grid to the player with numeric column labels starting from 1
   private void displayGrid() {
-    System.out.print("   ");
+    System.out.println();
+
+    System.out.print("  ");
     for (int i = 1; i <= SIZE; i++) {
       if (i < 10) {
         System.out.print(" ");
@@ -54,71 +56,75 @@ public class Minesweeper {
     System.out.println();
 
     for (int i = 0; i < SIZE; i++) {
-      System.out.print((char) ('A' + i) + " |");
+      System.out.print((char) ('A' + i) + " ");
       for (int j = 0; j < SIZE; j++) {
-        if (revealed[i][j]) {
+        if (selected[i][j]) {
           System.out.print(" " + grid[i][j] + " ");
+        } else if (marked[i][j]) {
+          System.out.print(" ! ");
         } else {
           System.out.print(" - ");
         }
       }
       System.out.println();
     }
+
   }
 
-  // Main game loop
   public void play() {
     boolean gameOver = false;
 
     while (!gameOver) {
       displayGrid();
-      System.out.print("Enter row and column (e.g., A10): ");
+      System.out.print("Enter coordinate: ");
       String input = scanner.nextLine().trim();
 
-      if (input.length() < 2) {
-        System.out.println("Invalid input. Please enter both row and column.");
-        continue;
-      }
-
-      char rowChar = Character.toUpperCase(input.charAt(0));
-      String colStr = input.substring(1);
-      int col;
       try {
-        col = Integer.parseInt(colStr) - 1; // Adjust column to zero-based index
-      } catch (NumberFormatException e) {
-        System.out.println("Invalid column. Please enter a valid number.");
-        continue;
-      }
+        char firstChar = input.charAt(0);
 
-      int row = rowChar - 'A'; // Convert row character to index
+        if (firstChar == '!') {
+          char rowChar = Character.toUpperCase(input.charAt(1));
+          String colStr = input.substring(2);
+          int col = Integer.parseInt(colStr) - 1;
+          int row = rowChar - 'A';
 
-      if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) {
-        System.out.println("Invalid input. Please enter valid coordinates.");
-        continue;
-      }
+          marked[row][col] = !marked[row][col];
+        } else {
+          char rowChar = Character.toUpperCase(firstChar);
+          String colStr = input.substring(1);
+          int col = Integer.parseInt(colStr) - 1;
+          int row = rowChar - 'A';
 
-      if (mines.contains(row * SIZE + col)) {
-        System.out.println("Game Over! You hit a mine.");
-        gameOver = true;
-      } else {
-        revealCell(row, col);
-        if (checkWin()) {
-          System.out.println("Congratulations! You cleared all safe cells.");
-          gameOver = true;
+          if (mines.contains(row * SIZE + col)) {
+            System.out.println();
+            System.out.println("Boom! Game Over.");
+            System.out.println();
+            gameOver = true;
+          } else {
+            selectSpace(row, col);
+            if (checkWin()) {
+              System.out.println();
+              System.out.println("You win!");
+              System.out.println();
+              gameOver = true;
+            }
+          }
         }
+      } catch (Exception e) {
+        System.out.println();
+        System.out.println("Invalid input. Please input <row><column> to select a space, or !<row><column> to mark a space. For example, 'a12', '!b4', 'f2', etc.");
+        System.out.println();
       }
     }
   }
 
-  // Reveal the selected cell
-  private void revealCell(int row, int col) {
-    if (row < 0 || row >= SIZE || col < 0 || col >= SIZE || revealed[row][col]) {
+  private void selectSpace(int row, int col) {
+    if (row < 0 || row >= SIZE || col < 0 || col >= SIZE || selected[row][col]) {
       return;
     }
 
-    revealed[row][col] = true;
+    selected[row][col] = true;
 
-    // Count adjacent mines
     int count = 0;
     for (int dr = -1; dr <= 1; dr++) {
       for (int dc = -1; dc <= 1; dc++) {
@@ -131,23 +137,21 @@ public class Minesweeper {
     }
 
     if (count > 0) {
-      grid[row][col] = (char) (count + '0'); // Convert count to char
+      grid[row][col] = (char) (count + '0');
     } else {
       grid[row][col] = ' ';
-      // Auto-reveal adjacent cells if no adjacent mines
       for (int dr = -1; dr <= 1; dr++) {
         for (int dc = -1; dc <= 1; dc++) {
-          revealCell(row + dr, col + dc);
+          selectSpace(row + dr, col + dc);
         }
       }
     }
   }
 
-  // Check if all non-mine cells are revealed
   private boolean checkWin() {
     for (int i = 0; i < SIZE; i++) {
       for (int j = 0; j < SIZE; j++) {
-        if (!revealed[i][j] && !mines.contains(i * SIZE + j)) {
+        if (!selected[i][j] && !mines.contains(i * SIZE + j)) {
           return false;
         }
       }
