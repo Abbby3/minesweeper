@@ -1,37 +1,15 @@
-Project: Minesweeper
-MVP
-Recreate a simplified version of the game Minesweeper to be played in the java console
+# Minesweeper
+This application is a simple java-based game of Minesweeper, that is run in a terminal and controlled with text inputs.
 
-The game should be able to randomly generate 10 mines in a 10x10 grid
-2 Dimensional Array
-The application should "draw" the grid every turn by printing to the console
-System.out
-The user will be able to enter a command that represents a coordinate to check a location for a mine
+## instructions
+On running main, the user is presented with a grid and is prompted to input a coordinate. 
+Coordinates are formatted as (rows)(column), for example 'd2' would select the 4th row down, 2nd column across.
+Selecting a coordinate will show the hidden value of that space and display a new grid for the next game state.
+The space will either be a mine, in which case the game is lost, or will say how many mines are adjacent to that space in a 3x3 area.
+If the space has no mines next to it, all other spaces around that space will be selected, cascading if multiple touching spaces are not next to a mine.
+The user can also place an exclaimation mark before the coordinate input, for example '!a7', which will mark that space.
+Marked spaces will display as '!' until selected or unmarked. 
+If the user selects all spaces without a mine, the game is won.
 
-  
-Use Scanner with system in
-
-The application will display a number from 0-8 depending on how many mines surround that location
-
-If the user selects a mine, the game will respond "boom!" and the game will be lost
-
-If every non-mine square has been revealed, the game is won
-
-Render the grid to the console after every user command
-
-Bonuses (optional)
-Allow for the user to configure number of mines and grid size
-
-  
-via a configuration.json file
-OR command line arguments
-OR interactive menu at start of game
-
-Use a file to track wins and losses
-
-(Difficult) Discovering an empty square should reveal all squares around it, and cascade into other nearby empty squares
-
-Tips
-This can be done in a single file, but try and think in terms of OOP
-Think about the kind of classes that might represent the state of the game, board, cells etc
-A good challenge would be to see how much you can abstract the logic, so that the game code would work with different inputs, i.e GUI or from web.
+## future versions
+Future versions should include an option for the user to input a grid size and mines count at the start of the game, and for the input to be abstracted to work with different mediums, such as a GUI or from web.

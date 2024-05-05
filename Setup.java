@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Setup {
-  private int SIZE = 8;
+  private int SIZE = 10;
   private int MINES = 10;
 
   private char[][] grid;

@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Play {
-  private int SIZE = 8;
+  private int SIZE = 10;
   private Scanner scanner;
   private Setup setup;
   private DisplayGrid displayGrid;

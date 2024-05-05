@@ -1,5 +1,5 @@
 public class DisplayGrid {
-  private int SIZE = 8;
+  private int SIZE = 10;
 
   public void displayGrid(char[][] grid, boolean[][] selected, boolean[][] marked) {
     System.out.println();
