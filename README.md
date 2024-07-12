@@ -1,15 +1,57 @@
 # Minesweeper
-This application is a simple java-based game of Minesweeper, that is run in a terminal and controlled with text inputs.
 
-## instructions
-On running main, the user is presented with a grid and is prompted to input a coordinate. 
-Coordinates are formatted as (rows)(column), for example 'd2' would select the 4th row down, 2nd column across.
-Selecting a coordinate will show the hidden value of that space and display a new grid for the next game state.
-The space will either be a mine, in which case the game is lost, or will say how many mines are adjacent to that space in a 3x3 area.
-If the space has no mines next to it, all other spaces around that space will be selected, cascading if multiple touching spaces are not next to a mine.
-The user can also place an exclaimation mark before the coordinate input, for example '!a7', which will mark that space.
-Marked spaces will display as '!' until selected or unmarked. 
-If the user selects all spaces without a mine, the game is won.
+===========
 
-## future versions
-Future versions should include an option for the user to input a grid size and mines count at the start of the game, and for the input to be abstracted to work with different mediums, such as a GUI or from web.
+## Snippets
+
+![UI Example](UI.png)
+
+## Description
+
+This project is a simplified version of the Minesweeper game, designed to be played in the Java console. The game features a 10x10 grid with 10 randomly placed mines. Players can enter coordinates to check for mines, and the game will provide feedback on the number of surrounding mines or trigger a loss if a mine is selected.
+
+The player can either input a coordinate as (row)(column) e.g. A6, or they can place a flag as !(row)(column) e.g. !F1
+
+### Tech Stack
+
+- Java
+
+## Build Steps
+
+1.  Clone the repository.
+
+```shell
+git clone https://github.com/Abbby3/minesweeper
+```
+
+2.  Navigate to the project directory.
+
+```shell
+cd minesweeper
+```
+
+3.  Compile the Java program.
+
+```shell
+javac *.java
+```
+
+4.  Run the application.
+
+```shell
+java Main
+```
+
+## Features
+
+- Randomly generate a 10x10 grid with 10 mines.
+- Display the grid in the console after each move.
+- Allow the user to input coordinates to check for mines or to place flags.
+- Cascading reveals for groups of clear spaces.
+- Show the number of surrounding mines for each cell.
+- Display a game over message and end the game if a mine is selected.
+- Win the game by revealing all non-mine squares.
+
+## Future Goals
+
+- Allow the user to configure the number of mines and grid size via a menu at the start of the game.
